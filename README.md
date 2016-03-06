@@ -34,17 +34,15 @@ To add a dependency using Gradle:
 compile 'io.bretty:console-tree-builder:2.0'
 ```
 
-## Classes in the Package
-
-* `PrintableTreeNode` - an interface you your own tree node class must implement
-* `TreePrinter` - a utility class that takes a root tree node and convert the entire tree into a formatted string
-
-
-
 ## Usage Example
 
-### By Implementing `PrintableTreeNode` Interface
+There are multiple ways to print your tree in a string:
 
+* Make your own tree node class implement the `PrintableTreeNode` interface, or
+* If you wish NOT to modify the source code of your tree node class, a `TreeNodeConverter` object for your tree node class that works as an adapter, or
+* Make use of one of the default implementations of `TreeNodeConverter` for java classes (e.g. `File` class)
+
+### By Implementing `PrintableTreeNode` Interface
 
 First, let's assume you already have a class called `TreeNode` in your project:
 
@@ -168,3 +166,17 @@ public static void main(String[] args) {
 }
 ```
 The output of it will look like the second screenshot above.
+
+### By Using Default `TreeNodeConverter<T>` Implementations
+
+Actually, we have implemented the `TreeNodeConverter<File>` in the `StandardTreeNodeConverters` class. To simplify the example above, use the default implementation.
+
+```java
+public static void main(String[] args) {
+	File root = new File("src/");
+	String output = TreePrinter.toString(root, StandardTreeNodeConverters.FILE);
+	System.out.println(output);
+}
+```
+
+It will print the same result as the second screenshot above.
