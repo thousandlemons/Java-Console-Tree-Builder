@@ -38,11 +38,59 @@ compile 'io.bretty:console-tree-builder:2.0'
 
 There are multiple ways to print your tree in a string:
 
-* Make your own tree node class implement the `PrintableTreeNode` interface, or
-* If you wish NOT to modify the source code of your tree node class, a `TreeNodeConverter` object for your tree node class that works as an adapter, or
-* Make use of one of the default implementations of `TreeNodeConverter` for java classes (e.g. `File` class)
 
-### By Implementing `PrintableTreeNode` Interface
+* Create a `TreeNodeConverter` object for your tree node class that works as an adapter, or
+* Make use of one of the default implementations of `TreeNodeConverter` for java classes (e.g. `File` class), or
+* Make your own tree node class implement the `PrintableTreeNode` interface
+
+### By Create `TreeNodeConverter` for Your Own or Third-party Tree Node
+
+Suppose you want to print all the files in a directory `src/`, you will need to use the `File` class provided by Java, but you cannot modify the source code of the default `File` implementation. 
+
+So in this case, just write a converter that allows a `File` object to work as a tree node.
+
+```java
+public static void main(String[] args) {
+
+	File root = new File("src/");
+	
+	TreeNodeConverter<File> converter = new TreeNodeConverter(){
+		@Override
+		public String name(File file) {
+		    return file.getName();
+		}
+
+		@Override
+		public List<? extends File> children(File file) {
+		    List<File> files = new ArrayList<>();
+		    if (file.isDirectory()) {
+				files.addAll(Arrays.asList(file.listFiles()));
+		    }
+		    return files;
+		}
+	};
+	
+	String output = TreePrinter.toString(root, converter);
+	System.out.println(output);
+}
+```
+The output of it will look like the second screenshot above.
+
+### By Using Default `TreeNodeConverter<T>` Implementations
+
+Actually, we have implemented the `TreeNodeConverter<File>` in the `StandardTreeNodeConverters` class. To simplify the example above, simple use the default implementation for `File`:
+
+```java
+public static void main(String[] args) {
+	File root = new File("src/");
+	String output = TreePrinter.toString(root, StandardTreeNodeConverters.FILE);
+	System.out.println(output);
+}
+```
+
+It will print the same result as the second screenshot above.
+
+### By Implementing `PrintableTreeNode` Interface on Your Own Tree Node Class
 
 First, let's assume you already have a class called `TreeNode` in your project:
 
@@ -134,49 +182,3 @@ Finally, convert your tree to string and print it:
 
 The output of it will look like the first screenshot above.
 
-### By Implementing `TreeNodeConverter<T>` Interface
-
-Suppose you want to print all the files in a directory `src/`, you will need to use the `File` class provided by Java, but you cannot modify the source code of the default `File` implementation. 
-
-So in this case, just write a converter that allows a `File` object to work as a tree node.
-
-```java
-public static void main(String[] args) {
-
-	File root = new File("src/");
-	
-	TreeNodeConverter<File> converter = new TreeNodeConverter(){
-		@Override
-		public String name(File file) {
-		    return file.getName();
-		}
-
-		@Override
-		public List<? extends File> children(File file) {
-		    List<File> files = new ArrayList<>();
-		    if (file.isDirectory()) {
-				files.addAll(Arrays.asList(file.listFiles()));
-		    }
-		    return files;
-		}
-	};
-	
-	String output = TreePrinter.toString(root, converter);
-	System.out.println(output);
-}
-```
-The output of it will look like the second screenshot above.
-
-### By Using Default `TreeNodeConverter<T>` Implementations
-
-Actually, we have implemented the `TreeNodeConverter<File>` in the `StandardTreeNodeConverters` class. To simplify the example above, use the default implementation.
-
-```java
-public static void main(String[] args) {
-	File root = new File("src/");
-	String output = TreePrinter.toString(root, StandardTreeNodeConverters.FILE);
-	System.out.println(output);
-}
-```
-
-It will print the same result as the second screenshot above.
