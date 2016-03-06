@@ -43,7 +43,7 @@ There are multiple ways to print your tree in a string:
 * Make use of one of the default implementations of `TreeNodeConverter` for java classes (e.g. `File` class), or
 * Make your own tree node class implement the `PrintableTreeNode` interface
 
-### By Create `TreeNodeConverter` for Your Own or Third-party Tree Node
+### By Creating `TreeNodeConverter` for Your Own or Third-party Tree Node
 
 Suppose you want to print all the files in a directory `src/`, you will need to use the `File` class provided by Java, but you cannot modify the source code of the default `File` implementation. 
 
