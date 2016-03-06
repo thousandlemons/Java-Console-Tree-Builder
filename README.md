@@ -1,18 +1,22 @@
 # Console Tree Builder
 
-[![maven central](https://img.shields.io/badge/maven%20central-1.0-brightgreen.svg)](https://search.maven.org/#artifactdetails%7Cio.bretty%7Cconsole-tree-builder%7C1.0%7Cjar)
+[![maven central](https://img.shields.io/badge/maven%20central-2.0-brightgreen.svg)](https://search.maven.org/#artifactdetails%7Cio.bretty%7Cconsole-tree-builder%7C2.0%7Cjar)
 [![license](https://img.shields.io/hexpm/l/plug.svg)]([![GitHub license](https://img.shields.io/github/license/mashape/apistatus.svg)](https://raw.githubusercontent.com/nathanielove/Java-Console-Tree-Builder/master/license.txt))
 
 The library converts a tree into a formatted string, for exmaple:
 
 ![output](output.png)
 
+or,
+
+![output-file](output-files.png)
+
 
 ## Latest Release
 
-The most recent release is Console Tree Builder 1.0, released 28 Feb 2016.
+The most recent release is Console Tree Builder 2.0, released 6 March 2016.
 
-Version 1.0 API Docs: [Package io.bretty.console.tree](https://www.javadoc.io/doc/io.bretty/console-tree-builder/1.0)
+Version 2.0 API Docs: [Package io.bretty.console.tree](https://www.javadoc.io/doc/io.bretty/console-tree-builder/2.0)
 
 To add a dependency using Maven, use the following:
 
@@ -20,14 +24,14 @@ To add a dependency using Maven, use the following:
 <dependency>
   <groupId>io.bretty</groupId>
   <artifactId>console-tree-builder</artifactId>
-  <version>1.0</version>
+  <version>2.0</version>
 </dependency>
 ```
 
 To add a dependency using Gradle:
 
 ```groovy
-compile 'io.bretty:console-tree-builder:1.0'
+compile 'io.bretty:console-tree-builder:2.0'
 ```
 
 ## Classes in the Package
@@ -38,6 +42,9 @@ compile 'io.bretty:console-tree-builder:1.0'
 
 
 ## Usage Example
+
+### By Implementing `PrintableTreeNode` Interface
+
 
 First, let's assume you already have a class called `TreeNode` in your project:
 
@@ -126,3 +133,38 @@ Finally, convert your tree to string and print it:
 		String output = TreePrinter.toString(a);
 		System.out.println(output);
 ```
+
+The output of it will look like the first screenshot above.
+
+### By Implementing `TreeNodeConverter<T>` Interface
+
+Suppose you want to print all the files in a directory `src/`, you will need to use the `File` class provided by Java, but you cannot modify the source code of the default `File` implementation. 
+
+So in this case, just write a converter that allows a `File` object to work as a tree node.
+
+```java
+public static void main(String[] args) {
+
+	File root = new File("src/");
+	
+	TreeNodeConverter<File> converter = new TreeNodeConverter(){
+		@Override
+		public String name(File file) {
+		    return file.getName();
+		}
+
+		@Override
+		public List<? extends File> children(File file) {
+		    List<File> files = new ArrayList<>();
+		    if (file.isDirectory()) {
+				files.addAll(Arrays.asList(file.listFiles()));
+		    }
+		    return files;
+		}
+	};
+	
+	String output = TreePrinter.toString(root, converter);
+	System.out.println(output);
+}
+```
+The output of it will look like the second screenshot above.

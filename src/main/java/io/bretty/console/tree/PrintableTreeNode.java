@@ -7,13 +7,11 @@ import java.util.List;
  */
 public interface PrintableTreeNode {
     /**
-     *
      * @return the name of the node that you wish to print later
      */
     String name();
 
     /**
-     *
      * @return a list of children of this node
      */
     List<? extends PrintableTreeNode> children();
