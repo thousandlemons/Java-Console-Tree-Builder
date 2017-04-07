@@ -1,7 +1,7 @@
 # Console Tree Builder
 
 [![maven central](https://img.shields.io/badge/maven%20central-2.0-brightgreen.svg)](https://search.maven.org/#artifactdetails%7Cio.bretty%7Cconsole-tree-builder%7C2.0%7Cjar)
-[![license](https://img.shields.io/hexpm/l/plug.svg)]([![GitHub license](https://img.shields.io/github/license/mashape/apistatus.svg)](https://raw.githubusercontent.com/nathanielove/Java-Console-Tree-Builder/master/license.txt))
+[![license](https://img.shields.io/hexpm/l/plug.svg)]()
 
 The library converts a tree into a formatted string, for exmaple:
 
